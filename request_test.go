@@ -25,7 +25,7 @@ func (s *TestSuite) TestRetriesWith500(c *C) {
 	c.Assert(req.Retry, Equals, retry)
 	c.Assert(req.URL, Equals, ts.URL)
 
-	_, err := req.do()
+	_, err := req.Do()
 
 	if err != nil {
 		fmt.Println("err", err)
@@ -50,7 +50,7 @@ func (s *TestSuite) TestRetriesWithError(c *C) {
 	c.Assert(req.Retry, Equals, retry)
 	c.Assert(req.URL, Equals, "qojerq")
 
-	_, err := req.do()
+	_, err := req.Do()
 
 	if err != nil {
 		fmt.Println("err", err)

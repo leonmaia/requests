@@ -1,3 +1,4 @@
+// Package requests implements functions to manipulate requests.
 package request
 
 import (
@@ -8,11 +9,17 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
+// New returns an Request with exponential backoff as default.
+func New() *Request {
+	return &Request{backoff: backoff.NewExponentialBackOff()}
+}
+
+// Request type.
 type Request struct {
 	URL     string
-	Retry   int
-	body    []byte
-	backoff *backoff.ExponentialBackOff
+	Retry   int                         // Amount of retries.
+	body    []byte                      // Response Body.
+	backoff *backoff.ExponentialBackOff // Default Type of backoff.
 }
 
 func doReq(r *Request) error {
@@ -38,7 +45,8 @@ func doReq(r *Request) error {
 	return nil
 }
 
-func (r *Request) do() ([]byte, error) {
+// Do should be callend when the Request is fully configured.
+func (r *Request) Do() ([]byte, error) {
 	err := doReq(r)
 	if err != nil {
 		op := r.operation()
@@ -55,10 +63,4 @@ func (r *Request) operation() func() error {
 	return func() error {
 		return doReq(r)
 	}
-}
-
-func NewRequest() *Request {
-	r := &Request{}
-	r.backoff = backoff.NewExponentialBackOff()
-	return r
 }
