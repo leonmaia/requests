@@ -1,5 +1,5 @@
 // Package requests implements functions to manipulate requests.
-package request
+package requests
 
 import (
 	"errors"
