@@ -18,12 +18,11 @@ func (s *TestSuite) TestRetriesWith500(c *C) {
 	)
 	defer ts.Close()
 
-	req := New()
-	req.URL = ts.URL
-	req.Retry = retry
+	req, _ := NewRequest("GET", ts.URL, nil)
+	req.Retries(retry)
 
-	c.Assert(req.Retry, Equals, retry)
-	c.Assert(req.URL, Equals, ts.URL)
+	c.Assert(req.retry, Equals, retry)
+	c.Assert(fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host), Equals, ts.URL)
 
 	_, err := req.Do()
 
@@ -31,11 +30,10 @@ func (s *TestSuite) TestRetriesWith500(c *C) {
 		fmt.Println("err", err)
 	}
 
-	c.Assert(req.Retry, Equals, 0)
+	c.Assert(req.retry, Equals, 0)
 }
 
 func (s *TestSuite) TestRetriesWithError(c *C) {
-	retry := 3
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			errors.New("emit macho dwarf: elf header corrupted")
@@ -43,12 +41,9 @@ func (s *TestSuite) TestRetriesWithError(c *C) {
 	)
 	defer ts.Close()
 
-	req := New()
-	req.URL = "qojerq"
-	req.Retry = retry
+	req, _ := NewRequest("GET", "http://www.qoroqer.com", nil)
 
-	c.Assert(req.Retry, Equals, retry)
-	c.Assert(req.URL, Equals, "qojerq")
+	c.Assert(req.URL.Host, Equals, "www.qoroqer.com")
 
 	_, err := req.Do()
 
@@ -56,5 +51,5 @@ func (s *TestSuite) TestRetriesWithError(c *C) {
 		fmt.Println("err", err)
 	}
 
-	c.Assert(req.Retry, Equals, 0)
+	c.Assert(req.retry, Equals, 0)
 }
