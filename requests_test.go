@@ -22,7 +22,7 @@ func (s *TestSuite) TestRetriesWith500(c *C) {
 	req.Retries(retry)
 
 	c.Assert(req.retry, Equals, retry)
-	c.Assert(fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host), Equals, ts.URL)
+	c.Assert(req.httpReq.URL.String(), Equals, ts.URL)
 
 	_, err := req.Do()
 
@@ -43,7 +43,7 @@ func (s *TestSuite) TestRetriesWithError(c *C) {
 
 	req, _ := NewRequest("GET", "http://www.qoroqer.com", nil)
 
-	c.Assert(req.URL.Host, Equals, "www.qoroqer.com")
+	c.Assert(req.httpReq.URL.String(), Equals, "http://www.qoroqer.com")
 
 	_, err := req.Do()
 

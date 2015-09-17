@@ -8,8 +8,8 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
-func doReq(r *Request) (*http.Response, error) {
-	res, err := http.Get(r.URL.String())
+func doReq(r *Request, c *http.Client) (*http.Response, error) {
+	res, err := c.Do(r.httpReq)
 	if err != nil && r.retry > 0 {
 		r.retry--
 		return nil, err
@@ -24,9 +24,10 @@ func doReq(r *Request) (*http.Response, error) {
 
 // Do should be called when the Request is fully configured.
 func (r *Request) Do() ([]byte, error) {
-	res, err := doReq(r)
+	c := r.newClient()
+	res, err := doReq(r, c)
 	if err != nil {
-		op := r.operation()
+		op := r.operation(c)
 		err = backoff.Retry(op, r.backoff)
 		if err != nil {
 			return nil, err
@@ -46,9 +47,9 @@ func (r *Request) Do() ([]byte, error) {
 	return nil, errors.New("Server Error")
 }
 
-func (r *Request) operation() func() error {
+func (r *Request) operation(c *http.Client) func() error {
 	return func() error {
-		_, err := doReq(r)
+		_, err := doReq(r, c)
 		return err
 	}
 }

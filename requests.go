@@ -4,27 +4,35 @@ package requests
 import (
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/cenkalti/backoff"
 )
 
-// Default quantity of retries
-const RETRIES = 3
+const (
+	// Default quantity of retries
+	RETRIES = 3
+	// Default timeout is 30 seconds
+	TIMEOUT = 30 * time.Second
+)
 
-// New returns an Request with exponential backoff as default.
+// NewRequest returns an Request with exponential backoff as default.
 func NewRequest(method, urlStr string, body io.Reader) (*Request, error) {
 	req, err := http.NewRequest(method, urlStr, body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Request{req, RETRIES, backoff.NewExponentialBackOff()}, nil
+	return &Request{
+			req, RETRIES, TIMEOUT, backoff.NewExponentialBackOff()},
+		nil
 }
 
 // Request type.
 type Request struct {
-	*http.Request
+	httpReq *http.Request
 	retry   int
+	timeout time.Duration
 	backoff *backoff.ExponentialBackOff // Default Type of backoff.
 }
 
@@ -32,4 +40,16 @@ type Request struct {
 func (r *Request) Retries(times int) *Request {
 	r.retry = times
 	return r
+}
+
+// Timeout specifies a time limit for requests made by the Client.
+// A Timeout of zero means no timeout.
+func (r *Request) Timeout(t time.Duration) *Request {
+	r.timeout = t
+	return r
+}
+
+// New Client with timeout
+func (r *Request) newClient() *http.Client {
+	return &http.Client{Timeout: r.timeout}
 }
