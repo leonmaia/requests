@@ -1,6 +1,8 @@
-# requests
+# Requests
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](http://godoc.org/pkg/github.com/leonmaia/requests)
 [![wercker status](https://app.wercker.com/status/93d520ff365ec9ed21189add12450999/s/master "wercker status")](https://app.wercker.com/project/bykey/93d520ff365ec9ed21189add12450999)
+
+Most existing requests packages I've seen reimplement all features requests offers. This Request inherits all the behavior and functions of [http.Requests](https://godoc.org/net/http#Request) package and adds others functions and behaviors.
 
 ![amazing](https://raw.github.com/leonmaia/requests/master/readme_assets/jake_amazed.gif)
 
