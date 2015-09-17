@@ -1,5 +1,9 @@
 # requests
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](http://godoc.org/pkg/github.com/leonmaia/requests)
+[![wercker status](https://app.wercker.com/status/93d520ff365ec9ed21189add12450999/s/master "wercker status")](https://app.wercker.com/project/bykey/93d520ff365ec9ed21189add12450999)
+
+"wercker status")]
+status")](https://app.wercker.com/project/bykey/93d520ff365ec9ed21189add12450999)
 
 ![amazing](https://raw.github.com/leonmaia/requests/master/readme_assets/jake_amazed.gif)
 
