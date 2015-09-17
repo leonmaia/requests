@@ -5,6 +5,7 @@ Features
 --------
 
 - Retries
+- Connection Timeouts
 
 Installation
 ------------
