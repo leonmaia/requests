@@ -11,9 +11,9 @@ import (
 
 const (
 	// Default quantity of retries
-	RETRIES = 3
+	Retries = 3
 	// Default timeout is 30 seconds
-	TIMEOUT = 30 * time.Second
+	Timeout = 30 * time.Second
 )
 
 // NewRequest returns an Request with exponential backoff as default.
@@ -24,7 +24,7 @@ func NewRequest(method, urlStr string, body io.Reader) (*Request, error) {
 	}
 
 	return &Request{
-			req, RETRIES, TIMEOUT, backoff.NewExponentialBackOff()},
+			req, Retries, Timeout, backoff.NewExponentialBackOff()},
 		nil
 }
 
