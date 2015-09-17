@@ -9,7 +9,7 @@ import (
 )
 
 func doReq(r *Request, c *http.Client) (*http.Response, error) {
-	res, err := c.Do(r.httpReq)
+	res, err := c.Do(r.Request)
 	if err != nil && r.retry > 0 {
 		r.retry--
 		return nil, err

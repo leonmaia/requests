@@ -21,7 +21,7 @@ func (s *TestSuite) TestShouldRetryAfterResponseCode5XX(c *C) {
 	req, _ := NewRequest("GET", ts.URL, nil)
 
 	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.httpReq.URL.String(), Equals, ts.URL)
+	c.Assert(req.URL.String(), Equals, ts.URL)
 
 	req.Do()
 
@@ -38,7 +38,7 @@ func (s *TestSuite) TestShouldRetryWhenErrorHappens(c *C) {
 
 	req, _ := NewRequest("GET", "http://www.qoroqer.com", nil)
 
-	c.Assert(req.httpReq.URL.String(), Equals, "http://www.qoroqer.com")
+	c.Assert(req.URL.String(), Equals, "http://www.qoroqer.com")
 
 	req.Do()
 
@@ -58,7 +58,7 @@ func (s *TestSuite) TestShouldKeepRetryCountIntactWhenOK(c *C) {
 	req, _ := NewRequest("GET", ts.URL, nil)
 
 	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.httpReq.URL.String(), Equals, ts.URL)
+	c.Assert(req.URL.String(), Equals, ts.URL)
 
 	resp, _ := req.Do()
 
@@ -79,7 +79,7 @@ func (s *TestSuite) TestShouldRetrieWhenTimeout(c *C) {
 	req.Timeout(1 * time.Nanosecond)
 
 	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.httpReq.URL.String(), Equals, ts.URL)
+	c.Assert(req.URL.String(), Equals, ts.URL)
 
 	req.Do()
 
@@ -98,7 +98,7 @@ func (s *TestSuite) TestShouldChangeQuantityOfRetries(c *C) {
 	req.Retries(2)
 
 	c.Assert(req.retry, Equals, 2)
-	c.Assert(req.httpReq.URL.String(), Equals, ts.URL)
+	c.Assert(req.URL.String(), Equals, ts.URL)
 
 	req.Do()
 

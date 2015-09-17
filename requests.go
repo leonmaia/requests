@@ -30,7 +30,7 @@ func NewRequest(method, urlStr string, body io.Reader) (*Request, error) {
 
 // Request type.
 type Request struct {
-	httpReq *http.Request
+	*http.Request
 	retry   int
 	timeout time.Duration
 	backoff *backoff.ExponentialBackOff // Default Type of backoff.
