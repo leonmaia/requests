@@ -3,14 +3,40 @@ package requests
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 	"time"
-
-	. "gopkg.in/check.v1"
 )
 
-func (s *TestSuite) TestShouldRetryAfterResponseCode5XX(c *C) {
+func TestShouldBeAbleToSetQuantityOfRetries(t *testing.T) {
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
+	defer ts.Close()
+
+	if req, _ := NewRequest("GET", ts.URL, nil); req.retry != Retries {
+		t.Error(fmt.Sprintf("retry should've been set to %d, got %d", Retries, req.retry))
+	}
+}
+
+func TestShouldBeAbleToSetURL(t *testing.T) {
+	ts := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
+	defer ts.Close()
+
+	if req, _ := NewRequest("GET", ts.URL, nil); req.URL.String() != ts.URL {
+		t.Error(fmt.Sprintf("url should've been set to %s, got %s", ts.URL, req.URL.String()))
+	}
+}
+
+func TestShouldRetryAfterResponseCode5XX(t *testing.T) {
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -19,16 +45,14 @@ func (s *TestSuite) TestShouldRetryAfterResponseCode5XX(c *C) {
 	defer ts.Close()
 
 	req, _ := NewRequest("GET", ts.URL, nil)
-
-	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.URL.String(), Equals, ts.URL)
-
 	req.Do()
 
-	c.Assert(req.retry, Equals, 0)
+	if req.retry != 0 {
+		t.Error(fmt.Sprintf("retry should be 0, got %d", req.retry))
+	}
 }
 
-func (s *TestSuite) TestShouldRetryWhenErrorHappens(c *C) {
+func TestShouldRetryWhenErrorHappens(t *testing.T) {
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			errors.New("emit macho dwarf: elf header corrupted")
@@ -37,15 +61,14 @@ func (s *TestSuite) TestShouldRetryWhenErrorHappens(c *C) {
 	defer ts.Close()
 
 	req, _ := NewRequest("GET", "http://www.qoroqer.com", nil)
-
-	c.Assert(req.URL.String(), Equals, "http://www.qoroqer.com")
-
 	req.Do()
 
-	c.Assert(req.retry, Equals, 0)
+	if req.retry != 0 {
+		t.Error(fmt.Sprintf("retry should be 0, got %d", req.retry))
+	}
 }
 
-func (s *TestSuite) TestShouldKeepRetryCountIntactWhenOK(c *C) {
+func TestShouldKeepRetryCountIntactWhenOK(t *testing.T) {
 	numbers := []int{1, 2, 3, 4, 5}
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -56,20 +79,17 @@ func (s *TestSuite) TestShouldKeepRetryCountIntactWhenOK(c *C) {
 	defer ts.Close()
 
 	req, _ := NewRequest("GET", ts.URL, nil)
+	req.Do()
 
-	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.URL.String(), Equals, ts.URL)
-
-	resp, _ := req.Do()
-
-	c.Assert(req.retry, Equals, Retries)
-	c.Assert(resp, Not(Equals), nil)
+	if req.retry != Retries {
+		t.Error(fmt.Sprintf("retry should not have changed from %d, to %d", Retries, req.retry))
+	}
 }
 
-func (s *TestSuite) TestShouldRetrieWhenTimeout(c *C) {
+func TestShouldRetrieWhenTimeout(t *testing.T) {
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			time.Sleep(50 * time.Nanosecond)
+			time.Sleep(50 * time.Millisecond)
 			w.WriteHeader(http.StatusOK)
 		}),
 	)
@@ -78,29 +98,28 @@ func (s *TestSuite) TestShouldRetrieWhenTimeout(c *C) {
 	req, _ := NewRequest("GET", ts.URL, nil)
 	req.Timeout(1 * time.Nanosecond)
 
-	c.Assert(req.retry, Equals, Retries)
-	c.Assert(req.URL.String(), Equals, ts.URL)
-
 	req.Do()
 
-	c.Assert(req.retry, Equals, 0)
+	if req.retry != 0 {
+		t.Error(fmt.Sprintf("retry should be 0, got %d", req.retry))
+	}
 }
 
-func (s *TestSuite) TestShouldChangeQuantityOfRetries(c *C) {
+func TestResponseShouldNotBeNilWhenOK(t *testing.T) {
+	numbers := []int{1, 2, 3, 4, 5}
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(http.StatusInternalServerError)
+			js, _ := json.Marshal(&numbers)
+			w.Write(js)
 		}),
 	)
 	defer ts.Close()
 
 	req, _ := NewRequest("GET", ts.URL, nil)
-	req.Retries(2)
-
-	c.Assert(req.retry, Equals, 2)
-	c.Assert(req.URL.String(), Equals, ts.URL)
-
 	req.Do()
 
-	c.Assert(req.retry, Equals, 0)
+	if resp, _ := req.Do(); resp == nil {
+		t.Error("response should be nil")
+	}
+
 }
