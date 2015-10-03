@@ -5,10 +5,6 @@
 		{
 			"ImportPath": "github.com/cenkalti/backoff",
 			"Rev": "4dc77674aceaabba2c7e3da25d4c823edfb73f99"
-		},
-		{
-			"ImportPath": "gopkg.in/check.v1",
-			"Rev": "64131543e7896d5bcc6bd5a76287eb75ea96c673"
 		}
 	]
 }
