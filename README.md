@@ -1,4 +1,6 @@
 # Requests
+
+[![Join the chat at https://gitter.im/leonmaia/requests](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/leonmaia/requests?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](http://godoc.org/pkg/github.com/leonmaia/requests)
 [![wercker status](https://app.wercker.com/status/93d520ff365ec9ed21189add12450999/s/master "wercker status")](https://app.wercker.com/project/bykey/93d520ff365ec9ed21189add12450999)
 
