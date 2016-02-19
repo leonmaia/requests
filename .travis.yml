@@ -1,0 +1,7 @@
+language: go
+
+go:
+    - go1.6
+    - tip
+
+install: make godep
