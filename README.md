@@ -14,6 +14,7 @@ Features
 
 - Retries
 - Connection Timeouts
+- byte and json streams
 
 Installation
 ------------
