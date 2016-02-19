@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/leonmaia/requests](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/leonmaia/requests?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](http://godoc.org/pkg/github.com/leonmaia/requests)
-[![wercker status](https://app.wercker.com/status/93d520ff365ec9ed21189add12450999/s/master "wercker status")](https://app.wercker.com/project/bykey/93d520ff365ec9ed21189add12450999)
+[![Build Status](https://travis-ci.org/leonmaia/requests.svg?branch=master)](https://travis-ci.org/leonmaia/requests)
 
 Most existing requests packages I've seen reimplement all features requests offers. This Request inherits all the behavior and functions of [http.Requests](https://godoc.org/net/http#Request) package and adds others functions and behaviors.
 
@@ -55,4 +55,3 @@ to contribute them and help make this package even better.
 
 Make sure all the tests are passing, and that you have covered all the changes
 you made.
-
