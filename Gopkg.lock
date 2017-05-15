@@ -1,0 +1,13 @@
+memo = "24fe84e095497fae2cddcb3b5f6e8f70e61caf3fa34caedb08258575247389bb"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  revision = "5d150e7eec023ce7a124856b37c68e54b4050ac7"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "84f0e6f92b10139f986b1756e149a7d9de270cdc"
